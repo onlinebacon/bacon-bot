@@ -1,6 +1,6 @@
 const wipeChannel = async (channel) => {
     for (;;) {
-        const messages = await channel.messages.fetch({ limit: 1 });
+        const messages = await channel.messages.fetch({ limit: 10 });
         if (messages.size == 0) return;
         const promises = [];
         messages.forEach(message => {
