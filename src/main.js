@@ -3,6 +3,7 @@ import { Client, IntentsBitField } from 'discord.js';
 
 import * as ImNele from './functions/im-nele/main.js';
 import * as Wipe from './functions/wipe/main.js';
+import * as Instances from './functions/instances/main.js';
 
 const client = new Client({
 	intents: [
@@ -25,6 +26,7 @@ const init = async () => {
 	await Promise.all([
 		ImNele.init(client),
 		Wipe.init(client),
+		Instances.init(client),
 	]);
 	console.log('Functionalities initialized');
 };
