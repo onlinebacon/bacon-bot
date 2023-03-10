@@ -31,7 +31,7 @@ export const init = async (client) => {
 		const time = Date.now() + value*mul;
 		const { channelId } = message.member.voice;
 		if (!channelId) {
-			message.reply('No voice channel found');
+			message.reply(`I can't find which voice channel you are`);
 			return;
 		}
 		const textChannelId = message.channel.id;
@@ -40,7 +40,7 @@ export const init = async (client) => {
 	});
 	Scheduler.on('disconnect', ({ userId, channelId, messageId, textChannelId }) => {
 		const channel = client.channels.cache.get(channelId);
-		channel.members.get(userId).voice?.disconnect();
+		channel?.members.get(userId)?.voice?.disconnect();
 		client.channels.cache.get(textChannelId).messages.delete(messageId);
 	});
 };
