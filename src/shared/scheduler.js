@@ -13,7 +13,11 @@ const getQueue = () => {
 };
 
 const trigger = ({ event, data }) => {
-    handlerMap[event]?.(data);
+    try {
+        handlerMap[event]?.(data);
+    } catch(error) {
+        console.error(error);
+    }
 };
 
 let checking = false;
