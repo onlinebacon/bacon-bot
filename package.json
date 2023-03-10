@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./src/main.js",
-    "start-dev": "nodemon ./src/main.js",
+    "start-dev": "nodemon ./src/main.js --ignore data/*.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
