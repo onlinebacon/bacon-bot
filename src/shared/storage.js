@@ -37,6 +37,9 @@ class Database {
 		return this;
 	}
 	async init() {
+		try {
+			await fs.mkdir(DIR);
+		} catch {}
 		if (this.initCalled === true) return this;
 		this.initCalled = true;
 		this.data = await loadOrEmpty(this.filename);
