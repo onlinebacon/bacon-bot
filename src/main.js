@@ -4,6 +4,7 @@ import { Client, IntentsBitField } from 'discord.js';
 import * as ImNele from './functions/im-nele/main.js';
 import * as Wipe from './functions/wipe/main.js';
 import * as Instances from './functions/instances/main.js';
+import * as Disconnect from './functions/disconnect/main.js';
 import * as Scheduler from './shared/scheduler.js';
 
 const client = new Client({
@@ -29,6 +30,7 @@ const init = async () => {
 		ImNele.init(client),
 		Wipe.init(client),
 		Instances.init(client),
+		Disconnect.init(client),
 	]);
 	console.log('Functionalities initialized');
 };
