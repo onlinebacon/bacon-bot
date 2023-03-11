@@ -12,8 +12,8 @@ export const init = async (client) => {
 		const userId = message.author.id;
 		if (userId !== Config.rootId) return;
 		const text = message.content;
-        if (!text.startsWith('.disconnect-in ')) return;
-        const timeText = text.replace(/^\.\w+-\w+\s+/, '').trim();
+		if (!text.startsWith('.disconnect-in ')) return;
+		const timeText = text.replace(/^\.\w+-\w+\s+/, '').trim();
 		const [, value, unit ] = timeText.match(/^(\d+)\s*([a-z]+)$/);
 		const mul = {
 			s: SECOND,
