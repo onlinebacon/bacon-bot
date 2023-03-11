@@ -32,7 +32,6 @@ const init = async () => {
 		Wipe.init(client),
 		Instances.init(client),
 		Disconnect.init(client),
-		TransferData.init(client),
 	]);
 	console.log('Functionalities initialized');
 };
