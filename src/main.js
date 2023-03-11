@@ -1,5 +1,6 @@
 import Config from './config.js';
 import { Client, IntentsBitField } from 'discord.js';
+import './api/main.js';
 
 import * as ImNele from './functions/im-nele.js';
 import * as Wipe from './functions/wipe.js';
@@ -31,6 +32,7 @@ const init = async () => {
 		Wipe.init(client),
 		Instances.init(client),
 		Disconnect.init(client),
+		TransferData.init(client),
 	]);
 	console.log('Functionalities initialized');
 };
