@@ -1,5 +1,5 @@
-import Config from '../../config.js';
-import wipeChannel from '../../shared/wipe-channel.js';
+import Config from '../config.js';
+import wipeChannel from '../shared/wipe-channel.js';
 
 const { nele, royalUserIds } = Config;
 

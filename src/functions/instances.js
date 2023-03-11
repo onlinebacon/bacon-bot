@@ -1,4 +1,4 @@
-import Config from '../../config.js';
+import Config from '../config.js';
 import { Events } from 'discord.js';
 
 export const init = async (client) => {

@@ -1,6 +1,6 @@
-import Config from '../../config.js';
-import * as Scheduler from '../../shared/scheduler.js';
-import { Events, MessageActivityType } from 'discord.js';
+import Config from '../config.js';
+import * as Scheduler from '../shared/scheduler.js';
+import { Events } from 'discord.js';
 
 const SECOND = 1000;
 const MINUTE = SECOND*60;

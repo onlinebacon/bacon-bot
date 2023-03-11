@@ -1,10 +1,10 @@
 import Config from './config.js';
 import { Client, IntentsBitField } from 'discord.js';
 
-import * as ImNele from './functions/im-nele/main.js';
-import * as Wipe from './functions/wipe/main.js';
-import * as Instances from './functions/instances/main.js';
-import * as Disconnect from './functions/disconnect/main.js';
+import * as ImNele from './functions/im-nele.js';
+import * as Wipe from './functions/wipe.js';
+import * as Instances from './functions/instances.js';
+import * as Disconnect from './functions/disconnect.js';
 import * as Scheduler from './shared/scheduler.js';
 
 const client = new Client({

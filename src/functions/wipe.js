@@ -1,6 +1,6 @@
-import Config from '../../config.js';
+import Config from '../config.js';
 import { Events } from 'discord.js';
-import wipeChannel from '../../shared/wipe-channel.js';
+import wipeChannel from '../shared/wipe-channel.js';
 
 export const init = async (client) => {
 	const reportChannel = client.channels.cache.get(Config.reportChannelId);
