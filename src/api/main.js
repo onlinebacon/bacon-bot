@@ -26,6 +26,6 @@ app.get('/ping', (req, res) => {
     res.write(text);
     res.end();
 });
-app.listen(80, () => {
+app.listen(8080, () => {
     console.log('API started');
 });
