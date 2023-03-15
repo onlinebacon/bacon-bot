@@ -12,9 +12,9 @@ const getQueue = () => {
 	return queue;
 };
 
-const trigger = ({ event, data }) => {
+const trigger = async ({ event, data }) => {
 	try {
-		handlerMap[event]?.(data);
+		await handlerMap[event]?.(data);
 	} catch(error) {
 		console.error(error);
 	}
@@ -32,7 +32,7 @@ const check = async () => {
 		if (top.time > now) break;
 		changed = true;
 		queue.splice(0, 1);
-		trigger(top);
+		await trigger(top);
 	}
 	if (changed) {
 		await storage.save();

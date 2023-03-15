@@ -1,21 +1,17 @@
 import Config from '../config.js';
-import { Events } from 'discord.js';
 
-export const init = async (client) => {
-	client.on(Events.MessageCreate, async (event) => {
-		const message = event;
-		const userId = message.author.id;
-		if (userId !== Config.rootId) return;
-		const text = message.content;
+export const init = (cli) => {
+	cli.onMessage(async (msg) => {
+		if (!msg.isFromRoot()) return;
+		const text = msg.getText();
 		if (text === '.instances') {
-			const channel = client.channels.cache.get(message.channelId);
-			channel.send(`I'm running on \`${Config.instance}\``);
-		} if (text.startsWith('.kill-instance ')) {
+			return msg.reply(`I'm running on \`${Config.instance}\``);
+		}
+		if (text.startsWith('.kill-instance ')) {
 			const instance = text.replace(/\.kill-instance\s*/, '').trim();
-			if (Config.instance === instance) {
-				await message.reply('Bye!');
-				process.exit(0);
-			}
+			if (Config.instance !== instance) return;
+			await msg.reply('Bye!');
+			process.exit(0);
 		}
 	});
 };

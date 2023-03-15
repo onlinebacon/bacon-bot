@@ -7,6 +7,7 @@ import * as Wipe from './functions/wipe.js';
 import * as Instances from './functions/instances.js';
 import * as Disconnect from './functions/disconnect.js';
 import * as Scheduler from './shared/scheduler.js';
+import ClientAdapter from './wrappers/client-wrapper.js';
 
 const client = new Client({
 	intents: [
@@ -18,22 +19,18 @@ const client = new Client({
 	],
 });
 
+const cli = new ClientAdapter(client);
+
 const init = async () => {
-	console.log('Starting...');
 	await client.login(Config.token);
-	console.log('Logged in successfully');
-	await new Promise(done => {
-		client.on('ready', done);
-	});
-	console.log('Client ready');
+	await new Promise(done => client.on('ready', done));
 	await Scheduler.init();
-	await Promise.all([
-		ImNele.init(client),
-		Wipe.init(client),
-		Instances.init(client),
-		Disconnect.init(client),
-	]);
-	console.log('Functionalities initialized');
+	Wipe.init(cli);
+	Instances.init(cli);
+	ImNele.init(cli);
+	Disconnect.init(cli);
 };
 
-init().catch(console.error);
+init()
+.then(() => console.log('Client ready'))
+.catch(console.error);

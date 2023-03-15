@@ -7,5 +7,6 @@ export default {
 	},
 	royalUserIds: [],
 	rootId: '',
+	queenId: '',
 	reportChannelId: '',
 };
