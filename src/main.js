@@ -6,6 +6,7 @@ import * as ImNele from './functions/im-nele.js';
 import * as Wipe from './functions/wipe.js';
 import * as Instances from './functions/instances.js';
 import * as Disconnect from './functions/disconnect.js';
+import * as Calc from './functions/calc.js';
 import * as Scheduler from './shared/scheduler.js';
 import ClientAdapter from './wrappers/client-wrapper.js';
 
@@ -29,6 +30,7 @@ const init = async () => {
 	Instances.init(cli);
 	ImNele.init(cli);
 	Disconnect.init(cli);
+	Calc.init(cli);
 };
 
 init()
