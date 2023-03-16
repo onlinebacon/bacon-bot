@@ -46,6 +46,8 @@ const fillContext = (ctx = new EvalContext()) => {
 	});
 	ctx.addFunction('exp', 1, (_, val) => exp(val));
 	ctx.addFunction('ln', 1, (_, val) => log(val));
+	ctx.addGetter('deg', ({ flags: { radians = 0 } }) => radians ? Math.PI/180 : 1);
+	ctx.addGetter('rad', ({ flags: { radians = 0 } }) => radians ? 1 : 180/Math.PI);
 	addUnits(ctx);
 };
 
