@@ -27,6 +27,7 @@ export const init = (cli) => {
                 return;
             }
         }
+        expr = expr.replace(/\s*`\s*(.*?)\s*`\s*/, '$1');
         try {
             const res = calc(expr, config);
             await msg.reply('answer: `' + res + '`');
