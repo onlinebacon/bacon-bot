@@ -65,13 +65,22 @@ export default class EvalParser {
 		}
 		return this.parseCall(fn);
 	}
+	parsePrefixed() {
+		const { queue } = this;
+		const op = queue.popIf(TOKEN.plus_minus);
+		switch(op) {
+			case '+': return this.parseItem();
+			case '-': return - this.parseItem();
+		}
+		return this.parseItem();
+	}
 	parsePow() {
 		const { queue } = this;
-		let pow = this.parseItem();
+		let pow = this.parsePrefixed();
 		for (;;) {
 			const op = queue.popIf('^');
 			if (op === null) break;
-			const item = this.parseItem();
+			const item = this.parsePrefixed();
 			pow = Math.pow(pow, item);
 		}
 		return pow;

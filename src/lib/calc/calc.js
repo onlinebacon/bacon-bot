@@ -10,6 +10,10 @@ const calc = (src, config = {}) => {
 		const [ name, value ] = entry;
 		ctx.addConstant(name, value);
 	});
+	Object.entries(config?.flags ?? {}).forEach((entry) => {
+		const [ name, value ] = entry;
+		ctx.flags[name] = value;
+	});
 	const parser = new EvalParser({ queue, context: ctx });
 	fillContext(ctx);
 	return parser.run();
