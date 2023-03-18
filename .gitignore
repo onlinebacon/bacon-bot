@@ -1,3 +1,6 @@
 node_modules/
+__pycache__/
 config.js
 *.temp.json
+*.bsp
+*.dat
