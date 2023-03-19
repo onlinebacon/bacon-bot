@@ -9,6 +9,7 @@ import * as Instances from './functions/instances.js';
 import * as Disconnect from './functions/disconnect.js';
 import * as Calc from './functions/calc.js';
 import * as Trilaterate from './functions/trilaterate.js';
+import * as GetGP from './functions/get-gp.js';
 
 const client = new Client({
 	intents: [
@@ -32,6 +33,7 @@ const init = async () => {
 	Disconnect.init(cli);
 	Calc.init(cli);
 	Trilaterate.init(cli);
+	GetGP.init(cli);
 };
 
 init()
