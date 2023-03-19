@@ -1,6 +1,5 @@
 import Config from './config.js';
 import { Client, IntentsBitField } from 'discord.js';
-import './api/main.js';
 import * as Scheduler from './shared/scheduler.js';
 import ClientAdapter from './wrappers/client-wrapper.js';
 
