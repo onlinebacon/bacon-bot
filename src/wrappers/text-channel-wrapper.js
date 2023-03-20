@@ -2,7 +2,7 @@ import ChannelAdapter from './channel-wapper.js';
 import MessageAdapter from './message-wrapper.js';
 
 export default class TextChannelAdapter extends ChannelAdapter {
-    async wipe(count) {
+    async wipe(count = Infinity) {
         const channel = this.getChannelObject();
         for (;;) {
             const messages = await channel.messages.fetch({ limit: Math.min(count, 50) });
