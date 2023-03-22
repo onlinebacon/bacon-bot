@@ -87,6 +87,7 @@ const toISOZone = (zone) => {
 };
 
 const parseTime = (time) => {
+	if (/^\s*now\s*$/i.test(time)) return new Date(Math.floor(Date.now()/1000)*1000);
 	const [ dt, t, zone = 'UTC' ] = time.split(/\s+/);
 	const iso = dt + 'T' + t + toISOZone(zone);
 	return new Date(iso);
@@ -113,6 +114,12 @@ const getPath = (name) => {
 const stringifyRa = (ra) => ra;
 const stringifyDeg = (deg) => deg;
 const stringifyDist = (dist) => Math.round(dist/1000) + ' km';
+const stringifyDate = (date) => {
+	let str = date.toISOString();
+	str = str.replace(/[tz]/ig, '\x20');
+	str = str.replace(/\.\d+/, '');
+	return str.trim() + ' UTC';
+};
 const hoursToDeg = (hours) => hours/24*360;
 const ghaToLon = (gha) => 180 - (gha + 180)%360;
 const stringifyLatLon = ([ lat, lon ]) => {
@@ -123,6 +130,7 @@ const getInfoMessage = (unixtime, data) => {
 	const { ra, dec, dist } = data;
 	let info = '```\n';
 	const ariesGHA = getAriesGHA(unixtime);
+	info += 'Time: ' + stringifyDate(new Date(unixtime*1000)) + '\n';
 	info += 'GHA of aries: ' + ariesGHA + '\n';
 	info += `Ra/Dec: ${stringifyRa(ra)}/${stringifyDeg(dec)}\n`;
 	if (dist) {
