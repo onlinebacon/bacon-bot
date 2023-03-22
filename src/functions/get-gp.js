@@ -1,5 +1,5 @@
 import getAriesGHA from '../lib/celnav/get-aries-gha.js';
-import Skyfield from '../shared/skyfield.js';
+import Skyfield from '../lib/skyfield.js';
 import ClientAdapter from '../wrappers/client-wrapper.js';
 import MessageAdapter from '../wrappers/message-wrapper.js';
 

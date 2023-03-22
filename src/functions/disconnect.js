@@ -1,4 +1,4 @@
-import * as Scheduler from '../shared/scheduler.js';
+import * as Scheduler from '../lib/scheduler.js';
 
 const SECOND = 1000;
 const MINUTE = SECOND*60;
