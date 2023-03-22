@@ -9,6 +9,7 @@ import * as Instances from './functions/instances.js';
 import * as Disconnect from './functions/disconnect.js';
 import * as Calc from './functions/calc.js';
 import * as GetGP from './functions/get-gp.js';
+import * as CorrectAlt from './functions/correct-alt.js';
 
 const client = new Client({
 	intents: [
@@ -32,6 +33,7 @@ const init = async () => {
 	Disconnect.init(cli);
 	Calc.init(cli);
 	GetGP.init(cli);
+	CorrectAlt.init(cli);
 };
 
 init()
