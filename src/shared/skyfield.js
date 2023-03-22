@@ -19,7 +19,7 @@ const promisifyReq = (url, config) => new Promise((done, fail) => {
     req.end();
 });
 
-export default class RestCli {
+class RestCli {
     constructor(url) {
         this.url = url;
     }
@@ -30,3 +30,7 @@ export default class RestCli {
         });
     }
 }
+
+const skyfield = new RestCli('http://127.0.0.1:25601');
+
+export default skyfield;

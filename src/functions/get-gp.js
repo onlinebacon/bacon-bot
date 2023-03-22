@@ -1,9 +1,8 @@
 import getAriesGHA from '../lib/celnav/get-aries-gha.js';
-import RestCli from '../shared/rest-cli.js';
+import Skyfield from '../shared/skyfield.js';
 import ClientAdapter from '../wrappers/client-wrapper.js';
 import MessageAdapter from '../wrappers/message-wrapper.js';
 
-const api = new RestCli('http://127.0.0.1:25601');
 const planets = ['mercury', 'venus', 'mars', 'jupiter', 'saturn'];
 const bodies = ['sun', 'moon'];
 const stars = {
@@ -153,7 +152,7 @@ export const init = async (cli = new ClientAdapter()) => {
 		if (isNaN(unix)) return msg.reply(`Invalid time format **${time}**`);
 		const fullpath = '/time/' + unix + path;
 		try {
-			const data = await api.get(fullpath);
+			const data = await Skyfield.get(fullpath);
 			msg.reply(getInfoMessage(unix, data));
 		} catch(err) {
 			console.error(err);
