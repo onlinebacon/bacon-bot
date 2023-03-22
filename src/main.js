@@ -34,6 +34,8 @@ const init = async () => {
 	Calc.init(cli);
 	GetGP.init(cli);
 	CorrectAlt.init(cli);
+	const reportChannel = cli.getTextChannel(Config.reportChannelId);
+	await reportChannel.sendTextMessage(`I'm online from \`${Config.instance}\``);
 };
 
 init()
