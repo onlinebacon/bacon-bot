@@ -1,3 +1,4 @@
+import Angle from '../lib/angle-format/angle-format.js';
 import getAriesGHA from '../lib/celnav/get-aries-gha.js';
 import Skyfield from '../lib/skyfield.js';
 import ClientAdapter from '../wrappers/client-wrapper.js';
@@ -111,8 +112,8 @@ const getPath = (name) => {
 	return null;
 };
 
-const stringifyRa = (ra) => ra;
-const stringifyDeg = (deg) => deg;
+const stringifyRa = (ra) => Angle.hours.stringify(ra);
+const stringifyDeg = (deg) => Angle.degrees.stringify(deg);
 const stringifyDist = (dist) => Math.round(dist/1000) + ' km';
 const stringifyDate = (date) => {
 	let str = date.toISOString();
@@ -131,7 +132,7 @@ const getInfoMessage = (unixtime, data) => {
 	let info = '```\n';
 	const ariesGHA = getAriesGHA(unixtime);
 	info += 'Time: ' + stringifyDate(new Date(unixtime*1000)) + '\n';
-	info += 'GHA of aries: ' + ariesGHA + '\n';
+	info += 'GHA of aries: ' + stringifyDeg(ariesGHA) + '\n';
 	info += `Ra/Dec: ${stringifyRa(ra)}/${stringifyDeg(dec)}\n`;
 	if (dist) {
 		info += `Distance: ${stringifyDist(dist)}\n`;
