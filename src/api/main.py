@@ -76,4 +76,31 @@ def get_moon_at(unix):
 		print(error)
 		return 'Internal error', 500
 
-app.run(port=25601, host='0.0.0.0')
+@app.route('/time/<int:unix>/bright-stars/<string:min_mag>')
+def get_bright_stars(unix, min_mag):
+	try:
+		min_mag = float(min_mag)
+		dt = datetime.fromtimestamp(unix).astimezone(timezone.utc)
+		t = ts.from_datetime(dt)
+		bright_df = df[df['magnitude'] <= min_mag]
+		bright_stars = Star.from_dataframe(bright_df)
+		csv = bright_df.to_csv().strip().split('\n')
+		res = []
+		ra_arr, dec_arr, dist_arr = earth.at(t).observe(bright_stars).radec(epoch='date')
+		ra_arr = ra_arr.hours
+		dec_arr = dec_arr.degrees
+		dist_arr = dist_arr.m
+		for i in range(len(csv) - 1):
+			cols = csv[i + 1].split(',')
+			hip = int(cols[0])
+			mag = float(cols[1])
+			ra = ra_arr[i]
+			dec = dec_arr[i]
+			dist = dist_arr[i]
+			res.append({ 'hip': hip, 'ra': ra, 'dec': dec, 'dist': dist, 'mag': mag })
+		return jsonify(res)
+	except Exception as error:
+		print(error)
+		return 'Internal error', 500
+
+app.run(port=25601, host='0.0.0.0', debug=True)
