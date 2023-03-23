@@ -4,11 +4,12 @@ const flagRegex = /^#\w+/;
 class Command {
     constructor(name) {
         this._name = name;
-        this._handler = async () => {};
+        this._handler = async (msg, args, flags) => {};
         this._split_args = false;
     }
     splitArgs() {
         this._split_args = true;
+        return this;
     }
     setHandler(handler) {
         this._handler = handler;
@@ -40,7 +41,8 @@ class CommandManager {
         name = name.substring(1);
         const cmd = this.map[name];
         if (!cmd) {
-            return msg.reply(`Unrecognized command **${name}**`);
+            // await msg.reply(`Unrecognized command **${name}**`);
+            return;
         }
         text = text.replace(nameRegex, '').trim();
         const flags = {};
@@ -50,17 +52,15 @@ class CommandManager {
             text = text.substring(flag.length).trim();
             const name = flag.substring(1);
             const entry = flagDict[name];
-            if (!entry) return msg.reply(`Unrecognized flag **${flag}**`);
+            if (!entry) {
+                await msg.reply(`Unrecognized flag **${flag}**`);
+                return;
+            }
             const [ key, val ] = entry;
             flags[key] = val;
         }
-        const args = cmd._split_args ? text ? [] : text.split(/\s*,\s*/) : text;
-        try {
-            await cmd._handler(msg, args, flags);
-        } catch(err) {
-            console.error(err);
-            await msg.reply(`:grimacing: sorry, something went wrong`);
-        }
+        const args = cmd._split_args ? text ? text.split(/\s*,\s*/) : [] : text;
+        await cmd._handler(msg, args, flags);
     }
 }
 

@@ -147,7 +147,7 @@ const getInfoMessage = (unixtime, data) => {
 	return info + '```';
 };
 
-const regex = /^.get-gp\b/;
+const regex = /^.get-gp(\s|$)/;
 export const init = async (cli = new ClientAdapter()) => {
 	cli.onMessage(async (msg = new MessageAdapter()) => {
 		const text = msg.getText();
