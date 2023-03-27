@@ -12,6 +12,7 @@ import * as CorrectAlt from './functions/correct-alt.js';
 
 import './commands/wipe.js';
 import './commands/get-gp-rep.js';
+import './commands/az-alt.js';
 
 import Commands from './lib/commands.js';
 
