@@ -1,11 +1,11 @@
 import Config from '../config.js';
-import TextChannelAdapter from './text-channel-wrapper.js';
-import VoiceChannelAdapter from './voice-channel-wrapper.js';
-import UserAdapter from './user-wrapper.js';
+import TextChannelWrapper from './text-channel-wrapper.js';
+import VoiceChannelWrapper from './voice-channel-wrapper.js';
+import UserWrapper from './user-wrapper.js';
 
 const { rootId } = Config;
 
-export default class MessageAdapter {
+export default class MessageWrapper {
     constructor(client, message) {
         this.client = client;
         this.message = message;
@@ -25,18 +25,18 @@ export default class MessageAdapter {
     }
     getChannel() {
         const { client, message } = this;
-        return new TextChannelAdapter(client, message.channelId);
+        return new TextChannelWrapper(client, message.channelId);
     }
     async reply(text) {
         const reply = await this.message.reply(text);
-        return new MessageAdapter(this.client, reply);
+        return new MessageWrapper(this.client, reply);
     }
     getUserConnectedChannel() {
         const { channelId } = this.message.member.voice ?? {};
         if (!channelId) return null;
-        return new VoiceChannelAdapter(this.client, channelId);
+        return new VoiceChannelWrapper(this.client, channelId);
     }
     getUser() {
-        return new UserAdapter(this.client, this.message.author.id);
+        return new UserWrapper(this.client, this.message.author.id);
     }
 }
