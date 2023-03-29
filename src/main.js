@@ -5,6 +5,7 @@ import Commands from './lib/commands/Commands.js';
 
 import './commands/wipe.js';
 import './commands/get-gp.js';
+import './commands/az-alt.js';
 
 const client = new Client({
 	intents: [
