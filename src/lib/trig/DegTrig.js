@@ -1,5 +1,5 @@
 const { sin, cos, tan, asin, acos, atan } = Math;
-const PI = Math;
+const { PI } = Math;
 const TO_RAD = PI/180;
 const TO_DEG = 180/PI;
 
