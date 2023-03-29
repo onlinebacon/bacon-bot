@@ -2,7 +2,7 @@ import Commands from '../lib/commands/Commands.js';
 
 Commands.add({
 	name: 'x',
-	description: 'Deletes messages from a text channel',
+	description: 'Delete messages from a text channel',
 	syntax: '.wipe [COUNT]',
 	examples: [
 		'.wipe',
@@ -13,6 +13,6 @@ Commands.add({
 		if (isNaN(count)) {
 			return this.handleBadSyntax(ctx);
 		}
-		return ctx.msg.getChannel().wipe(count);
+		await ctx.msg.getChannel().wipe(count);
 	},
 });
