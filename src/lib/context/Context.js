@@ -3,13 +3,17 @@ import RightAscension from '../angles/RightAscension.js';
 import LengthUnits from '../length-units/LengthUnits.js';
 import DegTrig from '../trig/DegTrig.js';
 import RadTrig from '../trig/RadTrig.js';
+import LatLon from '../angles/LatLon.js';
 
 const flagHandlers = {
 	'deg': (ctx) => ctx.trig = DegTrig,
 	'rad': (ctx) => ctx.trig = RadTrig,
 
+	'gp:nsew': (ctx) => ctx.latLon = ctx.latLon.nsew(),
+	'gp:plmn': (ctx) => ctx.latLon = ctx.latLon.plmn(),
+
 	'ra:deg': (ctx) => ctx.ra = ctx.ra.degrees(),
-	'ra:hr': (ctx) => ctx.ra = ctx.ra.hours(),
+	'ra:hr':  (ctx) => ctx.ra = ctx.ra.hours(),
 	
 	'ang:min': (ctx) => ctx.degFormat = ctx.degFormat.arcMins(),
 	'ang:sec': (ctx) => ctx.degFormat = ctx.degFormat.arcSecs(),
@@ -28,8 +32,8 @@ export default class Context {
 		this.trig = DegTrig;
 		this.degFormat = DegFormats;
 		this.lengthUnit = LengthUnits;
-		this.raInHours = true;
 		this.ra = RightAscension.set(this);
+		this.latLon = LatLon.set(this);
 	}
 	flagIsKnown(flag) {
 		const handler = flagHandlers[flag];

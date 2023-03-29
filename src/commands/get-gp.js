@@ -1,7 +1,5 @@
-import HoursFormat from '../lib/angles/HoursFormat.js';
 import calcAriesGHA from '../lib/celnav/calc-aries-gha.js';
 import Commands from '../lib/commands/Commands.js';
-import Context from '../lib/context/Context.js';
 import Skyfield from '../lib/skyfield/skyfield.js';
 
 const calcLon = (ariesGHA, raDeg) => {
@@ -13,7 +11,7 @@ const calcLat = (dec) => {
 	return dec;
 };
 
-const compileInfo = (ctx = new Context(), unixtime, { ra, dec, dist }) => {
+const compileInfo = (ctx, unixtime, { ra, dec, dist }) => {
 	let message = '';
 	const raVal = ctx.ra.fromHours(ra);
 	const strRa = ctx.ra.stringify(raVal);
@@ -23,8 +21,8 @@ const compileInfo = (ctx = new Context(), unixtime, { ra, dec, dist }) => {
 	const strAriesGHA = ctx.degFormat.stringify(ariesGHA);
 	const lat = calcLat(dec);
 	const lon = calcLon(ariesGHA, ctx.ra.toDegrees(raVal));
-	const latStr = ctx.degFormat.stringify(lat);
-	const lonStr = ctx.degFormat.stringify(lon);
+	const latStr = ctx.latLon.stringifyLat(lat);
+	const lonStr = ctx.latLon.stringifyLon(lon);
 	message += `**Ra/Dec**: \`${strRa}\` / \`${strDec}\`\n`;
 	message += `**Distance**: \`${strDist}\`\n`;
 	message += `**Aries GHA**: \`${strAriesGHA}\`\n`;
