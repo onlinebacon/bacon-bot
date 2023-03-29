@@ -1,6 +1,6 @@
-import ChannelAdapter from './channel-wapper.js';
+import ChannelWrapper from './channel-wapper.js';
 
-export default class VoiceChannelAdapter extends ChannelAdapter {
+export default class VoiceChannelWrapper extends ChannelWrapper {
 	getConnectedMember(id) {
 		return this.getChannelObject().members.get(id);
 	}

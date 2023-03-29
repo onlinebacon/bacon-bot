@@ -1,4 +1,4 @@
-export default class ChannelAdapter {
+export default class ChannelWrapper {
     constructor(client, id, channel) {
         this.client = client;
         this.id = id ?? channel?.id;

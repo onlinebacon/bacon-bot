@@ -1,19 +1,39 @@
-import Commands from '../lib/commands.js';
-import Angle from '../lib/angle-format/angle-format.js';
-import Distance from '../lib/distance.js';
-import { calcAzAlt } from '../lib/globe-math.js';
+import Commands from '../lib/commands/Commands.js';
+import DegParser from '../lib/angles/DegParser.js';
+import calcAzAlt from '../lib/sphere/calc-az-alt.js';
 
-const parseToRadians = (str) => Angle.parse(str)/180*Math.PI;
+const degToRad = (deg) => deg/180*Math.PI;
+const radToDeg = (rad) => rad/Math.PI*180;
 
-Commands.add('az-alt')
-.splitArgs()
-.setHandler(async (msg, args) => {
-	let [ aLat, aLon, bLat, bLon, dist = Infinity ] = args;
-	let observer_gp = [ aLat, aLon ].map(parseToRadians);
-	let body_gp = [ bLat, bLon ].map(parseToRadians);
-	if (typeof dist === 'string') dist = Distance.parse(dist);
-	const [ az, alt ] = calcAzAlt(observer_gp, body_gp, dist).map(radians => {
-		return Angle.stringify(radians*180/Math.PI);
-	});
-	msg.reply('```\n' + `Az: ${az}\nTrue alt: ${alt}` + '```');
+Commands.add({
+	name: 'az-alt',
+	listed: true,
+	description: 'Get azimuth and altitude from an observer at a certain ground position to a target at another ground position',
+	syntax: '.az-alt OBSERVER_LAT, OBSERVER_LON, TARGET_LAT, TARGET_LON [, TARGET_HEIGHT]',
+	examples: [
+		'.az-alt 45.32 N, 28.3 E, 27.16 N, 47.98 E, 403537 km',
+		'.az-alt -35.32, 23.4, 15.34, 47.98',
+	],
+	argSep: ',',
+	handler: async function({ ctx, args }) {
+		const parsed = args.map((val, i) => {
+			if (i < 4) {
+				const deg = DegParser.parse(val);
+				console.log({ val, deg });
+				return degToRad(deg);
+			}
+			return ctx.lengthUnit.parse(val);
+		});
+		if (parsed.find(val => isNaN(val)) != null) {
+			return this.handleBadSyntax(ctx);
+		}
+		const earthRadius = ctx.lengthUnit.parse('6371.0088km');
+		const [ aLat, aLon, bLat, bLon, height = Infinity ] = parsed;
+		const ratio = earthRadius/height;
+		console.log({ earthRadius, height, ratio });
+		const [ az, alt ] = calcAzAlt([ aLat, aLon ], [ bLat, bLon ], ratio).map(radToDeg);
+		const message = `**Azimuth**: \`${ctx.degFormat.stringify(az)}\`\n`
+			+ `**Altitude**: \`${ctx.degFormat.stringify(alt)}\``;
+		return ctx.msg.reply(message);
+	},
 });

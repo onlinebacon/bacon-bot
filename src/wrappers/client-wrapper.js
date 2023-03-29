@@ -1,10 +1,11 @@
 import { Events } from 'discord.js';
-import MessageAdapter from './message-wrapper.js';
-import TextChannelAdapter from './text-channel-wrapper.js';
-import UserAdapter from './user-wrapper.js';
-import VoiceChannelAdapter from './voice-channel-wrapper.js';
+import Context from '../lib/context/Context.js';
+import MessageWrapper from './message-wrapper.js';
+import TextChannelWrapper from './text-channel-wrapper.js';
+import UserWrapper from './user-wrapper.js';
+import VoiceChannelWrapper from './voice-channel-wrapper.js';
 
-export default class ClientAdapter {
+export default class ClientWrapper {
 	constructor(client) {
 		this.client = client;
 	}
@@ -12,7 +13,9 @@ export default class ClientAdapter {
 		const { client } = this;
 		client.on(Events.MessageCreate, async (message) => {
 			try {
-				await handler(new MessageAdapter(client, message));
+				const msg = new MessageWrapper(client, message);
+				const ctx = new Context({ msg });
+				await handler(ctx);
 			} catch(error) {
 				console.error(error);
 			}
@@ -23,8 +26,8 @@ export default class ClientAdapter {
 		client.on('voiceStateUpdate', async (prev, curr) => {
 			if (prev.channelId === curr.channelId) return;
 			if (!curr.channelId) return;
-			const user = new UserAdapter(client, curr.id);
-			const vc = new VoiceChannelAdapter(client, curr.channelId);
+			const user = new UserWrapper(client, curr.id);
+			const vc = new VoiceChannelWrapper(client, curr.channelId);
 			try {
 				await handler(vc, user);
 			} catch(error) {
@@ -33,12 +36,12 @@ export default class ClientAdapter {
 		});
 	}
 	getUser(userId) {
-		return new UserAdapter(this.client, userId);
+		return new UserWrapper(this.client, userId);
 	}
 	getTextChannel(channelId) {
-		return new TextChannelAdapter(this.client, channelId);
+		return new TextChannelWrapper(this.client, channelId);
 	}
 	getVoiceChannel(channelId) {
-		return new VoiceChannelAdapter(this.client, channelId);
+		return new VoiceChannelWrapper(this.client, channelId);
 	}
 }

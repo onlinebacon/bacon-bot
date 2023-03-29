@@ -39,7 +39,7 @@ const normalize = ([ x, y, z ]) => {
 	return [ x/len, y/len, z/len ];
 };
 
-const vecToChord = ([ x, y, z ]) => {
+const vecToCoord = ([ x, y, z ]) => {
 	const lat = asin(y);
 	const rad = sqrt(x*x + z*z);
 	if (rad === 0) return [ lat, 0 ];
@@ -55,7 +55,7 @@ const interpolateCoords = (aCoord, bCoord, val) => {
 	const t = projectTValue(chord, val);
 	const vec = interpolateVecs(aVec, bVec, t);
 	const normal = normalize(vec);
-	return vecToChord(normal);
+	return vecToCoord(normal);
 };
 
 export default interpolateCoords;

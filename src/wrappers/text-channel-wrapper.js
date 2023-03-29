@@ -1,7 +1,7 @@
-import ChannelAdapter from './channel-wapper.js';
-import MessageAdapter from './message-wrapper.js';
+import ChannelWrapper from './channel-wapper.js';
+import MessageWrapper from './message-wrapper.js';
 
-export default class TextChannelAdapter extends ChannelAdapter {
+export default class TextChannelWrapper extends ChannelWrapper {
     async wipe(count = Infinity) {
         const channel = this.getChannelObject();
         for (;;) {
@@ -18,7 +18,7 @@ export default class TextChannelAdapter extends ChannelAdapter {
     }
     async sendTextMessage(text) {
         const msg = await this.getChannelObject().send(text);
-        return new MessageAdapter(this.client, msg);
+        return new MessageWrapper(this.client, msg);
     }
     deleteMessageById(msgId) {
 		return this.getChannelObject().messages.delete(msgId);
