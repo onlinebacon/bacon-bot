@@ -6,6 +6,9 @@ import RadTrig from '../trig/RadTrig.js';
 const flagHandlers = {
 	'deg': (ctx) => ctx.trig = DegTrig,
 	'rad': (ctx) => ctx.trig = RadTrig,
+
+	'ra:deg': (ctx) => ctx.raInHours = false,
+	'ra:hr': (ctx) => ctx.raInHours = true,
 	
 	'ang:min': (ctx) => ctx.degFormat = ctx.degFormat.arcMins(),
 	'ang:sec': (ctx) => ctx.degFormat = ctx.degFormat.arcSecs(),
@@ -24,6 +27,7 @@ export default class Context {
 		this.trig = DegTrig;
 		this.degFormat = DegFormats;
 		this.lengthUnit = LengthUnits;
+		this.raInHours = true;
 	}
 	flagIsKnown(flag) {
 		const handler = flagHandlers[flag];

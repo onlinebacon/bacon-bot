@@ -1,7 +1,8 @@
 import Commands from '../lib/commands/Commands.js';
 
 Commands.add({
-	name: 'x',
+	name: 'wipe',
+	listed: false,
 	description: 'Delete messages from a text channel',
 	syntax: '.wipe [COUNT]',
 	examples: [

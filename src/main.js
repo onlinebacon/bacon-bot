@@ -2,7 +2,9 @@ import Config from './config.js';
 import { Client, IntentsBitField } from 'discord.js';
 import ClientAdapter from './wrappers/client-wrapper.js';
 import Commands from './lib/commands/Commands.js';
+
 import './commands/wipe.js';
+import './commands/get-gp.js';
 
 const client = new Client({
 	intents: [

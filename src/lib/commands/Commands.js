@@ -6,13 +6,14 @@ const preventStyles = (str) => {
 };
 
 class Command {
-	constructor({ name, description, syntax, examples, handler, argSep }) {
+	constructor({ name, listed, description, syntax, examples, handler, argSep }) {
 		this.name = name;
 		this.description = description;
 		this.syntax = syntax;
 		this.examples = examples;
 		this.handler = handler;
 		this.argSep = argSep;
+		this.listed = listed;
 	}
 	help(ctx) {
 		let text = `**.${this.name}**\n`;
@@ -44,8 +45,19 @@ class CommandManager {
 		this.list.push(command);
 		return command;
 	}
+	handleHelp(ctx) {
+		let message = 'Run `.COMMAND --help` to learn how to use a command\nHere is the list of commands:\n';
+		for (let cmd of this.list) {
+			if (!cmd.listed) continue;
+			message += `**.${cmd.name}** - _${cmd.description}_\n`;
+		}
+		return ctx.msg.reply(message);
+	}
 	async handleMessage(ctx) {
 		let text = ctx.msg.getText();
+		if (text === '.help') {
+			return this.handleHelp(ctx);
+		}
 		let name = text.match(nameRegex)?.[0];
 		if (name == null) return;
 		text = text.substring(name.length).trim();
@@ -69,11 +81,10 @@ class CommandManager {
 			}
 			ctx.applyFlag(flag);
 		}
-		const args = cmd.argSep ? (text ? text.split(cmd.argSep) : []) : text;
+		const args = cmd.argSep ? (text ? text.split(cmd.argSep).map(val => val.trim()) : []) : text;
 		await cmd.handler({ ctx, args });
 	}
 }
 
 const Commands = new CommandManager();
-
 export default Commands;
