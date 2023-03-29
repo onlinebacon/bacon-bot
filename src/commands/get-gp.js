@@ -4,22 +4,25 @@ import Commands from '../lib/commands/Commands.js';
 import Context from '../lib/context/Context.js';
 import Skyfield from '../lib/skyfield/skyfield.js';
 
-const calcLon = (ariesGHA, ra) => {
-	const lon = (ra/24*360 - ariesGHA + 360 + 180)%360 - 180;
+const calcLon = (ariesGHA, raDeg) => {
+	const lon = (raDeg/24*360 - ariesGHA + 360 + 180)%360 - 180;
 	return lon;
 };
 
-const calcLat = (dec) => dec;
+const calcLat = (dec) => {
+	return dec;
+};
 
 const compileInfo = (ctx = new Context(), unixtime, { ra, dec, dist }) => {
 	let message = '';
-	const strRa = ctx.raInHours ? HoursFormat.stringify(ra) : ctx.degFormat.stringify(ra/24*360);
+	const raVal = ctx.ra.fromHours(ra);
+	const strRa = ctx.ra.stringify(raVal);
 	const strDec = ctx.degFormat.stringify(dec);
 	const strDist = ctx.lengthUnit.stringify(ctx.lengthUnit.parse(dist + 'm'));
 	const ariesGHA = calcAriesGHA(unixtime);
 	const strAriesGHA = ctx.degFormat.stringify(ariesGHA);
 	const lat = calcLat(dec);
-	const lon = calcLon(ariesGHA, ra);
+	const lon = calcLon(ariesGHA, ctx.ra.toDegrees(raVal));
 	const latStr = ctx.degFormat.stringify(lat);
 	const lonStr = ctx.degFormat.stringify(lon);
 	message += `**Ra/Dec**: \`${strRa}\` / \`${strDec}\`\n`;
