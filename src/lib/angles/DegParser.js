@@ -3,7 +3,7 @@ const negPrefixRegex = /^[-sw]/i;
 const posSuffixRegex = /^[ne]/i;
 const negSuffixRegex = /^[sw]/i;
 const sepRegex = /^(\s+|\s*[°'"]\s*)/;
-const numberRegex = /^\d(\.\d+)?/;
+const numberRegex = /^\d+(\.\d+)?/;
 
 const unitMap = {
 	'°': 1,
