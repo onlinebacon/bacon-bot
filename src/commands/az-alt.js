@@ -10,7 +10,10 @@ Commands.add({
 	listed: true,
 	description: 'Get azimuth and altitude from an observer at a certain ground position to a target at another ground position',
 	syntax: '.az-alt OBSERVER_LAT, OBSERVER_LON, TARGET_LAT, TARGET_LON [, TARGET_HEIGHT]',
-	examples: [],
+	examples: [
+		'.az-alt 45.32 N, 28.3 E, 27.16 N, 47.98 E, 403537 km',
+		'.az-alt -35.32, 23.4, 15.34, 47.98',
+	],
 	argSep: ',',
 	handler: async function({ ctx, args }) {
 		const parsed = args.map((val, i) => {
