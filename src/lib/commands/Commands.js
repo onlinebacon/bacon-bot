@@ -29,8 +29,11 @@ class Command {
 		}
 		return ctx.msg.reply(text);
 	}
-	handleBadSyntax(ctx) {
-		return ctx.msg.reply(`**Invalid syntax**\nTry\n\`.${this.name} --help\``);
+	handleBadSyntax(ctx, message) {
+		let text = `**Invalid syntax**\n`;
+		if (message) text += message + '\n';
+		text += `Try\n\`.${this.name} --help\``;
+		return ctx.msg.reply(text);
 	}
 }
 

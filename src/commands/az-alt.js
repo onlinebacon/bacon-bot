@@ -16,6 +16,8 @@ Commands.add({
 	],
 	argSep: ',',
 	handler: async function({ ctx, args }) {
+		if (args.length < 4) return this.handleBadSyntax(ctx, 'Missing arguments');
+		if (args.length > 5) return this.handleBadSyntax(ctx, 'Too many arguments');
 		const parsed = args.map((val, i) => {
 			if (i < 4) {
 				const deg = DegParser.parse(val);
