@@ -24,7 +24,13 @@ const init = async () => {
 	await client.login(Config.token);
 	await new Promise(done => client.on('ready', done));
 	cli.onMessage(async (ctx) => {
-		if (Config.debug && !ctx.msg.isFromRoot()) return;
+		const channelName = await ctx.msg.getChannel().getName();
+		if (Config.debug) {
+			if (!ctx.msg.isFromRoot()) return;
+			if (channelName !== 'bot-testing') return;
+		} else {
+			if (channelName == 'bot-testing') return;
+		}
 		try {
 			await Commands.handleMessage(ctx);
 		} catch(err) {

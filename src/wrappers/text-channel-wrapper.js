@@ -20,6 +20,10 @@ export default class TextChannelWrapper extends ChannelWrapper {
         const msg = await this.getChannelObject().send(text);
         return new MessageWrapper(this.client, msg);
     }
+    async getName() {
+        const channel = await this.getChannelObject();
+        return channel.name;
+    }
     deleteMessageById(msgId) {
 		return this.getChannelObject().messages.delete(msgId);
     }
