@@ -64,7 +64,9 @@ Commands.add({
 	],
 	argSep: ',',
 	handler: async function({ ctx, args }) {
-		const [ bodyName = '', strDate = '' ] = args;
+		if (args.length < 1) return this.handleBadSyntax(ctx, `Missing arguments`);
+		if (args.length > 2) return this.handleBadSyntax(ctx, `Too many arguments`);
+		const [ bodyName = '', strDate = 'now' ] = args;
 		const unixtime = parseDate(strDate);
 		if (isNaN(unixtime)) {
 			return ctx.msg.reply(`Invalid date`);
