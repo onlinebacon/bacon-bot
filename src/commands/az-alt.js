@@ -21,7 +21,6 @@ Commands.add({
 		const parsed = args.map((val, i) => {
 			if (i < 4) {
 				const deg = DegParser.parse(val);
-				console.log({ val, deg });
 				return degToRad(deg);
 			}
 			return ctx.lengthUnit.parse(val);
@@ -32,7 +31,6 @@ Commands.add({
 		const earthRadius = ctx.lengthUnit.parse('6371.0088km');
 		const [ aLat, aLon, bLat, bLon, height = Infinity ] = parsed;
 		const ratio = earthRadius/height;
-		console.log({ earthRadius, height, ratio });
 		const [ az, alt ] = calcAzAlt([ aLat, aLon ], [ bLat, bLon ], ratio).map(radToDeg);
 		const message = `**Azimuth**: \`${ctx.degFormat.stringify(az)}\`\n`
 			+ `**Altitude**: \`${ctx.degFormat.stringify(alt)}\``;

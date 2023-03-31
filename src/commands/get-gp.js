@@ -46,7 +46,6 @@ const parseDate = (str) => {
 	str = str.replace(/\b(\d):/g, '0$1:');
 	const [ date, time, zone = 'UTC' ] = str.split(/\s+/);
 	const iso = date + 'T' + time + formatZone(zone);
-	console.log(iso);
 	const datetime = new Date(iso);
 	const unixtime = Math.round(datetime.getTime()/1000);
 	return unixtime;

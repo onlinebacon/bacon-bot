@@ -9,7 +9,6 @@ const fieldParser = {
 	dip: (val) => lengthUnits.parse(val),
 	index: (val) => DegParser.parse(val),
 	ref: (val) => {
-		console.log({ val });
 		if (val == null || /^(std|standard)$/i.test(val)) {
 			return 'std';
 		}
