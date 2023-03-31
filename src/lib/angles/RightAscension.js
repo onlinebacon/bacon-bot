@@ -1,5 +1,3 @@
-import HoursFormat from './HoursFormat.js';
-
 class RAConverter {
 	constructor(ctx, useHours) {
 		this.ctx = ctx;
@@ -18,7 +16,7 @@ class RAConverter {
 		return this.useHours ? value : value/360*24;
 	}
 	stringify(value) {
-		return (this.useHours ? HoursFormat : this.ctx.degFormat).stringify(value);
+		return (this.useHours ? this.ctx.hoursFormat : this.ctx.degFormat).stringify(value);
 	}
 	hours() {
 		return new RAConverter(this.ctx, true);
