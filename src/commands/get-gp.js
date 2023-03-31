@@ -58,7 +58,7 @@ Commands.add({
 	syntax: '.get-gp BODY, DATETIME',
 	examples: [
 		'.get-gp sun, 2023-01-01 23:00:51 UTC',
-		'.get-gp juputer, 2022-06-25 16:01:34 GMT-3',
+		'.get-gp jupiter, 2022-06-25 16:01:34 GMT-3',
 		'.get-gp polaris, 2023-02-16 15:11:21',
 		'.get-gp moon, now',
 	],
