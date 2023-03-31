@@ -7,6 +7,7 @@ import './commands/wipe.js';
 import './commands/get-gp.js';
 import './commands/az-alt.js';
 import './commands/fix-alt.js';
+import './commands/sph-exc.js';
 
 const client = new Client({
 	intents: [
