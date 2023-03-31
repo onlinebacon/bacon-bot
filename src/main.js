@@ -3,11 +3,8 @@ import { Client, IntentsBitField } from 'discord.js';
 import ClientAdapter from './wrappers/client-wrapper.js';
 import Commands from './lib/commands/Commands.js';
 
-import './commands/wipe.js';
-import './commands/get-gp.js';
-import './commands/az-alt.js';
-import './commands/fix-alt.js';
-import './commands/sph-exc.js';
+import './commands/load-commands.js';
+import './tags/load-tags.js';
 
 const client = new Client({
 	intents: [

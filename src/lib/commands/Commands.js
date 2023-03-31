@@ -1,5 +1,6 @@
-const nameRegex = /^\.[a-z]+(-\w+)*/i;
-const flagRegex = /^#[a-z]+(:\w+)?/i;
+import Tags from './Tags.js';
+
+const cmdNameRegex = /^\.[a-z]+(-\w+)*/i;
 
 const preventStyles = (str) => {
 	return str.replace(/([`*_~\\])/g, '\\$1');
@@ -37,6 +38,17 @@ class Command {
 	}
 }
 
+const popTags = (text) => {
+	const tags = [];
+	let tag;
+	while (text !== '') {
+		[ tag, text ] = Tags.pop(text);
+		if (tag == null) break;
+		tags.push(tag);
+	}
+	return [ tags, text ];
+};
+
 class CommandManager {
 	constructor() {
 		this.map = {};
@@ -49,40 +61,42 @@ class CommandManager {
 		return command;
 	}
 	handleHelp(ctx) {
-		let message = 'Run `.COMMAND --help` to learn how to use a command\nHere is the list of commands:\n';
+		let text = 'Run `.COMMAND --help` to learn how to use a command\nHere is the list of commands:\n';
 		for (let cmd of this.list) {
 			if (!cmd.listed) continue;
-			message += `**.${cmd.name}** - _${cmd.description}_\n`;
+			text += `**.${cmd.name}** - _${cmd.description}_\n`;
 		}
-		return ctx.msg.reply(message);
+		return ctx.msg.reply(text);
 	}
 	async handleMessage(ctx) {
 		let text = ctx.msg.getText();
 		if (text === '.help') {
 			return this.handleHelp(ctx);
 		}
-		let name = text.match(nameRegex)?.[0];
+		let name = text.match(cmdNameRegex)?.[0];
 		if (name == null) return;
 		text = text.substring(name.length).trim();
 		name = name.substring(1);
 		const cmd = this.map[name];
 		if (!cmd) {
-			await ctx.msg.reply(`Unrecognized command **${name}**`);
-			return;
+			return ctx.msg.reply(`Unrecognized command **${name}**`);
 		}
 		if (text === '--help') {
 			return cmd.help(ctx);
 		}
-		for (;;) {
-			let flag = text.match(flagRegex)?.[0];
-			if (flag == null) break;
-			text = text.substring(flag.length).trim();
-			flag = flag.substring(1);
-			if (!ctx.flagIsKnown(flag)) {
-				await ctx.msg.reply(`Unrecognized flag **${flag}**`);
-				return;
+		let tags;
+		[ tags, text ] = popTags(text);
+		for (let str of tags) {
+			const name = Tags.getName(str);
+			const tag = Tags.findByName(name);
+			if (tag == null) {
+				return ctx.msg.reply(`Unrecognized tag **${name}**`);
 			}
-			ctx.applyFlag(flag);
+			const arg = Tags.getArg(str);
+			const res = tag.handler(ctx, arg);
+			if (res === false) {
+				return ctx.msg.reply(`Invalid value for tag **${name}**`);
+			}
 		}
 		const args = cmd.argSep ? (text ? text.split(cmd.argSep).map(val => val.trim()) : []) : text;
 		await cmd.handler({ ctx, args });
