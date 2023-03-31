@@ -72,6 +72,12 @@ class LengthUnit {
 		if (unit == null) return NaN;
 		return Number(str)*unit.meters/mainUnit.meters;
 	}
+	fromMeters(value) {
+		return value/this.mainUnit.meters;
+	}
+	toMeters(value) {
+		return value*this.mainUnit.meters;
+	}
 	use(unitName) {
 		return new LengthUnit(this.unitMap, this.nDigits, findUnit(unitName));
 	}
