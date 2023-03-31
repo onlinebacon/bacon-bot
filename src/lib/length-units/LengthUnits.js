@@ -40,6 +40,10 @@ const findUnit = (unit) => {
 };
 
 const stringifyDigits = (val, digits) => {
+	const abs = Math.abs(val);
+	if (abs >= Math.pow(10, digits)) {
+		return Math.round(val).toString();
+	}
 	return Number(val.toPrecision(digits)).toString();
 };
 
