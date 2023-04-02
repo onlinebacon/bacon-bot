@@ -65,7 +65,7 @@ Commands.add({
 			angle -= ref;
 		}
 
-		text += '**Altittude**: `' + ctx.degFormat.stringify(angle) + '`\n'; 
+		text += '**Altitude**: `' + ctx.degFormat.stringify(angle) + '`\n'; 
 		text += '**Co-altittude**: `' + ctx.degFormat.stringify(90 - angle) + '`\n'; 
 		return ctx.msg.reply(text);
 	},
