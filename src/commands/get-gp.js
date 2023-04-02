@@ -3,7 +3,7 @@ import Commands from '../lib/commands/Commands.js';
 import Skyfield from '../lib/skyfield/skyfield.js';
 
 const calcLon = (ariesGHA, raDeg) => {
-	const lon = (raDeg/24*360 - ariesGHA + 360 + 180)%360 - 180;
+	const lon = (raDeg - ariesGHA + 360 + 180)%360 - 180;
 	return lon;
 };
 
@@ -20,7 +20,8 @@ const compileInfo = (ctx, unixtime, { ra, dec, dist }) => {
 	const ariesGHA = calcAriesGHA(unixtime);
 	const strAriesGHA = ctx.degFormat.stringify(ariesGHA);
 	const lat = calcLat(dec);
-	const lon = calcLon(ariesGHA, ctx.ra.toDegrees(raVal));
+	const raDeg = ctx.ra.toDegrees(raVal);
+	const lon = calcLon(ariesGHA, raDeg);
 	const latStr = ctx.latLon.stringifyLat(lat);
 	const lonStr = ctx.latLon.stringifyLon(lon);
 	message += `**Ra/Dec**: \`${strRa}\` / \`${strDec}\`\n`;
