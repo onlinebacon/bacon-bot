@@ -14,6 +14,9 @@ class LatLonConverter {
 		const prefix = this.useNSEW ? EW : PM;
 		return this.ctx.degFormat.stringify(lon, prefix);
 	}
+	stringify([ lat, lon ]) {
+		return this.stringifyLat(lat) + ', ' + this.stringifyLon(lon);
+	}
 	nsew() {
 		return new LatLonConverter(this.ctx, true);
 	}

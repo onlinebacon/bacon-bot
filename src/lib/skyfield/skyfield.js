@@ -2,6 +2,67 @@ import http from 'http';
 
 const planets = ['mercury', 'venus', 'mars', 'jupiter', 'saturn'];
 const bodies = ['sun', 'moon'];
+const stars = [
+	'Alpheratz',
+	'Ankaa',
+	'Schedar',
+	'Diphda',
+	'Achernar',
+	'Hamal',
+	'Polaris',
+	'Acamar',
+	'Menkar',
+	'Mirfak',
+	'Aldebaran',
+	'Rigel',
+	'Capella',
+	'Bellatrix',
+	'Elnath',
+	'Alnilam',
+	'Betelgeuse',
+	'Canopus',
+	'Sirius',
+	'Adhara',
+	'Procyon',
+	'Pollux',
+	'Avior',
+	'Suhail',
+	'Miaplacidus',
+	'Alphard',
+	'Regulus',
+	'Dubhe',
+	'Denebola',
+	'Gienah',
+	'Acrux',
+	'Gacrux',
+	'Alioth',
+	'Spica',
+	'Alkaid',
+	'Hadar',
+	'Menkent',
+	'Arcturus',
+	'Rigil Kentaurus',
+	'Kochab',
+	'Zuben ubi',
+	'Alphecca',
+	'Antares',
+	'Atria',
+	'Sabik',
+	'Shaula',
+	'Rasalhague',
+	'Eltanin',
+	'Kaus Australis',
+	'Vega',
+	'Nunki',
+	'Altair',
+	'Peacock',
+	'Deneb',
+	'Enif',
+	'Al Nair',
+	'Fomalhaut',
+	'Scheat',
+	'Markab',
+];
 const hipMap = {
 	677: /^alpheratz$/i,
 	2081: /^ankaa$/i,
@@ -97,6 +158,8 @@ const promisifyReq = (url, config) => new Promise((done, fail) => {
 class RestCli {
     constructor(url) {
         this.url = url;
+		this.planets = planets;
+		this.stars = stars;
     }
     buildPath(name, unixtime) {
         const bodyPath = getBodyPath(name);
@@ -110,6 +173,9 @@ class RestCli {
             method: 'GET'
         });
     }
+	justGet(name, unixtime) {
+		return this.get(this.buildPath(name, unixtime));
+	}
 }
 
 const Skyfield = new RestCli('http://127.0.0.1:25601');
