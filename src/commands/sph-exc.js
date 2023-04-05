@@ -1,8 +1,9 @@
 import Commands from '../lib/commands/Commands.js';
 import calcSphericalExcess from '../lib/sphere/calc-spherical-excess.js';
 import LengthUnits from '../lib/length-units/LengthUnits.js';
+import Constants from '../lib/constants/Constants.js';
 
-const EARTH_RADIUS = 6371008.8;
+const EARTH_RADIUS = Constants.earthAverageRadius;
 const lengthUnits = LengthUnits.use('meters');
 
 Commands.add({

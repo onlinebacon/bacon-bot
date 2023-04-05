@@ -1,6 +1,7 @@
 import Commands from '../lib/commands/Commands.js';
 import DegParser from '../lib/angles/DegParser.js';
 import calcAzAlt from '../lib/sphere/calc-az-alt.js';
+import Constants from '../lib/constants/Constants.js';
 
 const degToRad = (deg) => deg/180*Math.PI;
 const radToDeg = (rad) => rad/Math.PI*180;
@@ -28,9 +29,9 @@ Commands.add({
 		if (parsed.find(val => isNaN(val)) != null) {
 			return this.handleBadSyntax(ctx);
 		}
-		const earthRadius = ctx.lengthUnit.parse('6371.0088km');
+		const R = ctx.lengthUnit.fromMeters(Constants.earthAverageRadius);
 		const [ aLat, aLon, bLat, bLon, height = Infinity ] = parsed;
-		const ratio = earthRadius/height;
+		const ratio = R/height;
 		const [ az, alt ] = calcAzAlt([ aLat, aLon ], [ bLat, bLon ], ratio).map(radToDeg);
 		const message = `**Azimuth**: \`${ctx.degFormat.stringify(az)}\`\n`
 			+ `**Altitude**: \`${ctx.degFormat.stringify(alt)}\``;

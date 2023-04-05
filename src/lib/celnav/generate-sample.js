@@ -1,3 +1,4 @@
+import Constants from '../constants/Constants.js';
 import shuffle from '../random/shuffle.js';
 import Skyfield from '../skyfield/skyfield.js';
 import calcAzAlt from '../sphere/calc-az-alt.js';
@@ -9,7 +10,7 @@ import twilightSamples from './twilight-samples.js';
 
 const toRad = (deg) => deg/180*Math.PI;
 const toDeg = (rad) => rad/Math.PI*180;
-const earthRadius = 6371008.8;
+const earthRadius = Constants.earthAverageRadius;
 
 const pickLocation = (sunGP) => {
 	const samples = twilightSamples(sunGP, 36, Math.random());

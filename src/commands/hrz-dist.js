@@ -1,8 +1,9 @@
 import Commands from '../lib/commands/Commands.js';
+import Constants from '../lib/constants/Constants.js';
 import LengthUnits from '../lib/length-units/LengthUnits.js';
 
 const meters = LengthUnits.use('meters');
-const R = 6371008.8;
+const R = Constants.earthAverageRadius;
 
 Commands.add({
 	name: 'hrz-dist',
