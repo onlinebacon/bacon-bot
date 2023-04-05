@@ -1,4 +1,4 @@
-import { calcSignedAngle } from './math.js';
+import { calcSignedAngle, calcUnsignedAngle } from './math.js';
 import { rotXVec3, rotYVec3, rotZVec3 } from './matrix-math.js';
 const { sin, cos, asin, acos } = Math;
 export const coordToVec = ([ lat, lon ], dst = new Array(3)) => {
@@ -17,6 +17,12 @@ export const haversine = ([ lat1, lon1 ], [ lat2, lon2 ]) => acos(
 	sin(lat1)*sin(lat2) +
 	cos(lat1)*cos(lat2)*cos(lon1 - lon2)
 );
+export const calcAzm = ([ lat1, lon1 ], [ lat2, lon2 ]) => {
+	const lon_dif = lon2 - lon1;
+	const x = sin(lon_dif);
+	const y = sin(lat2)*cos(lat1)/cos(lat2) - cos(lon_dif)*sin(lat1);
+	return calcUnsignedAngle(y, x);
+};
 export const shoot = ([ lat, lon ], azm, r, dst = new Array(2)) => {
 	const vec = [ 0, sin(r), cos(r) ];
 	rotZVec3(vec, azm, vec);
