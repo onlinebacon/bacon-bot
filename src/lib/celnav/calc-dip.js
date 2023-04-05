@@ -1,6 +1,8 @@
+import Constants from '../constants/Constants.js';
+
+const r = Constants.earthAverageRadius*7/6;
 const calcDip = (height) => {
-	const mins = 1.76*Math.sqrt(height);
-	return mins/60;
+	return Math.acos(r/(r + height))/Math.PI*180;
 }
 
 export default calcDip;
