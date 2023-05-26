@@ -31,6 +31,7 @@ Commands.add({
 		if (!checkSum(encrypted)) {
 			return ctx.msg.reply(`**Error**: checksum doesn't match`);
 		}
-		return ctx.msg.reply(`**Decrypted**: \`\`\`${decrypt(encrypted, password)}\`\`\``);
+		await ctx.msg.reply(`**Decrypted**: \`\`\`${decrypt(encrypted, password)}\`\`\``);
+		await ctx.msg.remove();
 	},
 });
