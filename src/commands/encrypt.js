@@ -12,7 +12,8 @@ Commands.add({
 		if (args.length < 2) return this.handleBadSyntax(ctx, `Missing arguments`);
 		if (args.length > 2) return this.handleBadSyntax(ctx, `Too many arguments`);
 		const [ text, password ] = args;
-		return ctx.msg.reply(`**Encrypted**: \`\`\`${encrypt(text, password)}\`\`\``);
+		await ctx.msg.reply(`**Encrypted**: \`\`\`${encrypt(text, password)}\`\`\``);
+		await ctx.msg.remove();
 	},
 });
 

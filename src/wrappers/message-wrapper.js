@@ -39,4 +39,7 @@ export default class MessageWrapper {
     getUser() {
         return new UserWrapper(this.client, this.message.author.id);
     }
+    remove() {
+        return this.message.delete();
+    }
 }
