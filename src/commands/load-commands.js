@@ -8,3 +8,4 @@ import './random-fix.js';
 import './sagitta.js';
 import './sph-exc.js';
 import './encrypt.js';
+import './dip.js';
