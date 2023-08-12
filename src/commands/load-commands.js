@@ -9,3 +9,4 @@ import './sagitta.js';
 import './sph-exc.js';
 import './encrypt.js';
 import './dip.js';
+import './intersect.js';
