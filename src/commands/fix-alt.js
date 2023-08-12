@@ -1,11 +1,17 @@
 import DegParser from '../lib/angles/DegParser.js';
 import calcAltRefraction from '../lib/celnav/calc-alt-refraction.js';
 import calcDip from '../lib/celnav/calc-dip.js';
+import calcParallax from '../lib/celnav/calc-parallax.js';
 import Commands from '../lib/commands/Commands.js';
 import LengthUnits from '../lib/length-units/LengthUnits.js';
 
 const lengthUnits = LengthUnits.use('meters');
 const fieldParser = {
+	parallax: (val) => {
+		val = val.trim().toLowerCase();
+		if (val === 'moon') return 3.844e8;
+		return lengthUnits.parse(val);
+	},
 	dip: (val) => lengthUnits.parse(val),
 	index: (val) => DegParser.parse(val),
 	ref: (val) => {
@@ -24,6 +30,7 @@ Commands.add({
 	examples: [
 		`.fix-alt 45° 12.3', dip: 15m, index: -2.5', ref`,
 		`.fix-alt 22.375, dip: 12ft`,
+		`.fix-alt 32, ref, parallax: moon`,
 	],
 	argSep: ',',
 	handler: async function({ ctx, args }) {
@@ -63,6 +70,13 @@ Commands.add({
 			const ref = calcAltRefraction(angle);
 			text += 'Refraction: ' + ctx.degFormat.stringify(-ref, ['+', '-']) + '\n';
 			angle -= ref;
+		}
+
+		if (config.parallax != null) {
+			const dist = config.parallax;
+			const c = calcParallax(angle, dist);
+			text += 'Parallax: ' + ctx.degFormat.stringify(c, ['+', '-']) + '\n';
+			angle += c;
 		}
 
 		text += '**Altitude**: `' + ctx.degFormat.stringify(angle) + '`\n'; 
