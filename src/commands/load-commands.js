@@ -10,3 +10,4 @@ import './sph-exc.js';
 import './encrypt.js';
 import './dip.js';
 import './intersect.js';
+import './hav.js';
