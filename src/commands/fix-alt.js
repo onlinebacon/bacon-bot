@@ -16,10 +16,59 @@ const fieldParser = {
 	index: (val) => DegParser.parse(val),
 	ref: (val) => {
 		if (val == null || /^(std|standard)$/i.test(val)) {
-			return 'std';
+			return { pMb: 1010, tempC: 10 };
 		}
-		return NaN;
+		const res = parseRefInput(val);
+		if (res.error) {
+			return NaN;
+		}
+		return res;
 	},
+};
+
+const farenheitToCelcius = (f) => (f - 32)*5/9;
+
+const numberToken = /^([-+]\s*)?\d+(\.\d+)?/;
+const unitToken = /^[a-z]+/i;
+const parseRefInput = (str) => {
+	str = str.trim();
+	const arr = [ numberToken, unitToken, numberToken, unitToken ];
+	const vals = [];
+	const errorMessage = 'Invalid input for temperature and pressure';
+	const errorObj = { error: true, message: errorMessage };
+	for (const regex of arr) {
+		let item = str.match(regex)?.[0] ?? null;
+		if (item == null) break;
+		vals.push(item);
+		str = str.replace(regex, '').trim();
+	}
+	if (str !== '' || vals.length !== 2 && vals.length !== 4) {
+		return errorObj;
+	}
+	let pMb = 1010, tempC = 10;
+	for (let i=0; i<vals.length; i+=2) {
+		let val = Number(vals[i]);
+		console.log({ val });
+		if (isNaN(val)) {
+			return errorObj;	
+		}
+		let unit = vals[i + 1].toLowerCase();
+		console.log({ unit });
+		switch (unit) {
+		case 'f':
+			tempC = farenheitToCelcius(val);
+			break;
+		case 'c':
+			tempC = val;
+			break;
+		case 'mb':
+			pMb = val;
+			break;
+		default:
+			return errorObj;	
+		}
+	}
+	return { error: false, pMb, tempC };
 };
 
 Commands.add({
@@ -28,8 +77,8 @@ Commands.add({
 	description: 'Apply altitude corrections to an elevation angle measurement',
 	syntax: '.fix-alt ANGLE [, CORRECTION]*',
 	examples: [
-		`.fix-alt 45° 12.3', dip: 15m, index: -2.5', ref`,
-		`.fix-alt 22.375, dip: 12ft`,
+		`.fix-alt 45° 12.3', dip: 15m, index: -2.5', ref: 1005 mb 12 C`,
+		`.fix-alt 22.375, dip: 12ft, ref: 75F`,
 		`.fix-alt 32, ref, parallax: moon`,
 	],
 	argSep: ',',
@@ -66,8 +115,9 @@ Commands.add({
 			angle -= dip;
 		}
 
-		if (config.ref == 'std') {
-			const ref = calcAltRefraction(angle);
+		if (config.ref != null) {
+			const { pMb, tempC } = config.ref;
+			const ref = calcAltRefraction(angle, pMb, tempC);
 			text += 'Refraction: ' + ctx.degFormat.stringify(-ref, ['+', '-']) + '\n';
 			angle -= ref;
 		}
