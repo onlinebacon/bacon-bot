@@ -6,11 +6,15 @@ import Trig from '../lib/trig/trig.js';
 const t = new Trig().useDegrees();
 const meters = LengthUnits.use('meters');
 const R = Constants.earthAverageRadius;
-const calc = (h, d) => (
-	t.sec(
-		t.rad(d/R) - t.acos(R/(R + h))
-	) - 1
-)*R;
+const calc = (h, d) => {
+	const theta = t.rad(d/R);
+	const alpha = t.acos(R/(R + h));
+	const sigma = theta - alpha;
+	if (sigma <= 0) {
+		return 0;
+	}
+	return (t.sec(sigma) - 1)*R;
+};
 
 Commands.add({
 	name: 'hid',
