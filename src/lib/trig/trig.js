@@ -12,6 +12,7 @@ export default class Trig {
 	sin(value) { return Math.sin(value*this.TO_RAD); }
 	cos(value) { return Math.cos(value*this.TO_RAD); }
 	tan(value) { return Math.tan(value*this.TO_RAD); }
+	sec(value) { return 1/Math.cos(value*this.TO_RAD); }
 	asin(value) { return Math.asin(value)*this.RADIAN; }
 	acos(value) { return Math.acos(value)*this.RADIAN; }
 	atan(value) { return Math.atan(value)*this.RADIAN; }
