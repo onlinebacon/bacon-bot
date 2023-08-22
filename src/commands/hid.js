@@ -15,7 +15,7 @@ const calc = (h, d) => (
 Commands.add({
 	name: 'hid',
 	listed: true,
-	description: 'Calculates amount of height obstructed by geometric curvature',
+	description: 'Calculates amount of height obstructed by geometric curvature after a specified distance',
 	syntax: '.hid HEIGHT, DISTANCE',
 	examples: [ '.hid 3 ft, 11 mi' ],
 	argSep: ',',
