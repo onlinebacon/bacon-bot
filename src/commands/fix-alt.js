@@ -1,16 +1,39 @@
 import DegParser from '../lib/angles/DegParser.js';
 import calcAltRefraction from '../lib/celnav/calc-alt-refraction.js';
 import calcDip from '../lib/celnav/calc-dip.js';
-import calcParallax from '../lib/celnav/calc-parallax.js';
 import Commands from '../lib/commands/Commands.js';
 import LengthUnits from '../lib/length-units/LengthUnits.js';
+import * as LimbCorrection from '../lib/celnav/limb-correction.js';
+import Constants from '../lib/constants/Constants.js';
+import calcParallax from '../lib/celnav/calc-parallax.js';
+
+const UPPER_LIMB = 'upper-limb';
+const LOWER_LIMB = 'lower-limb';
+const limbRegex = /\b(lower|upper)-limb\b/i;
+const parseSunMoonField = (val = '', defDist) => {
+	val = val.trim();
+	let limb = null;
+	let distance = defDist;
+	if (limbRegex.test(val)) {
+		limb = val.match(limbRegex)[0].toLowerCase();
+		val = val.replace(limbRegex, '').trim();
+	}
+	if (val !== '') {
+		distance = LengthUnits.parse(val);
+	}
+	if (isNaN(distance)) {
+		return NaN;
+	}
+	return { limb, distance };
+};
 
 const lengthUnits = LengthUnits.use('meters');
 const fieldParser = {
-	parallax: (val) => {
-		val = val.trim().toLowerCase();
-		if (val === 'moon') return 3.844e8;
-		return lengthUnits.parse(val);
+	moon: (val) => {
+		return parseSunMoonField(val, Constants.earthMoonAverageDistance);
+	},
+	sun: (val) => {
+		return parseSunMoonField(val, Constants.earthSunAverageDistance);
 	},
 	dip: (val) => lengthUnits.parse(val),
 	index: (val) => DegParser.parse(val),
@@ -48,12 +71,10 @@ const parseRefInput = (str) => {
 	let pMb = 1010, tempC = 10;
 	for (let i=0; i<vals.length; i+=2) {
 		let val = Number(vals[i]);
-		console.log({ val });
 		if (isNaN(val)) {
 			return errorObj;	
 		}
 		let unit = vals[i + 1].toLowerCase();
-		console.log({ unit });
 		switch (unit) {
 		case 'f':
 			tempC = farenheitToCelcius(val);
@@ -79,14 +100,16 @@ Commands.add({
 	examples: [
 		`.fix-alt 45° 12.3', dip: 15m, index: -2.5', ref: 1005 mb 12 C`,
 		`.fix-alt 22.375, dip: 12ft, ref: 75F`,
-		`.fix-alt 32, ref, parallax: moon`,
+		`.fix-alt 23.45, moon: 375412 km lower-limb`,
+		`.fix-alt 61° 15', sun: upper-limb`,
+		`.fix-alt 47.2, sun: lower-limb 151023974 km`,
 	],
 	argSep: ',',
 	handler: async function({ ctx, args }) {
 
 		const [ angleStr, ...configs ] = args;
-		let angle = DegParser.parse(angleStr);
-		if (isNaN(angle)) return this.handleBadSyntax(ctx);
+		let alt = DegParser.parse(angleStr);
+		if (isNaN(alt)) return this.handleBadSyntax(ctx);
 
 		const config = {};
 		for (let item of configs) {
@@ -101,36 +124,52 @@ Commands.add({
 			config[name] = parsed;
 		}
 
-		let text = 'Initial altitude: ' + ctx.degFormat.stringify(angle) + '\n';
+		let text = 'Initial altitude: ' + ctx.degFormat.stringify(alt) + '\n';
+
+		const addCorrection = (name, angle) => {
+			text += `${name}: ${ctx.degFormat.stringify(angle, ['+', '-'])}\n`;
+			alt += angle;
+		};
 
 		if (config.index != null) {
 			const index = config.index;
-			text += 'Index error: ' + ctx.degFormat.stringify(-index, ['+', '-']) + '\n';
-			angle -= index;
+			addCorrection('Index error', -index);
 		}
 
 		if (config.dip != null) {
 			const dip = calcDip(config.dip);
-			text += 'Dip: ' + ctx.degFormat.stringify(-dip, ['+', '-']) + '\n';
-			angle -= dip;
+			addCorrection('Dip', -dip);
 		}
 
 		if (config.ref != null) {
 			const { pMb, tempC } = config.ref;
-			const ref = calcAltRefraction(angle, pMb, tempC);
-			text += 'Refraction: ' + ctx.degFormat.stringify(-ref, ['+', '-']) + '\n';
-			angle -= ref;
+			const ref = calcAltRefraction(alt, pMb, tempC);
+			addCorrection('Refraction', -ref);
 		}
 
-		if (config.parallax != null) {
-			const dist = config.parallax;
-			const c = calcParallax(angle, dist);
-			text += 'Parallax: ' + ctx.degFormat.stringify(c, ['+', '-']) + '\n';
-			angle += c;
+		const moonSunCorrection = (arg, radius) => {
+			const { distance, limb } = arg;
+			if (limb === LOWER_LIMB) {
+				const val = LimbCorrection.lower(alt, distance, radius);
+				addCorrection('Limb correction', val);
+			}
+			if (limb === UPPER_LIMB) {
+				const val = LimbCorrection.upper(alt, distance, radius);
+				addCorrection('Limb correction', val);
+			}
+			addCorrection('Parallax', calcParallax(alt, distance));
+		};
+
+		if (config.moon != null) {
+			moonSunCorrection(config.moon, Constants.moonRadius);
 		}
 
-		text += '**Altitude**: `' + ctx.degFormat.stringify(angle) + '`\n'; 
-		text += '**Co-altitude**: `' + ctx.degFormat.stringify(90 - angle) + '`\n'; 
+		if (config.sun != null) {
+			moonSunCorrection(config.sun, Constants.sunRadius);
+		}
+
+		text += '**Altitude**: `' + ctx.degFormat.stringify(alt) + '`\n'; 
+		text += '**Co-altitude**: `' + ctx.degFormat.stringify(90 - alt) + '`\n'; 
 		return ctx.msg.reply(text);
 	},
 });
