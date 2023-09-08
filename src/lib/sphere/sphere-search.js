@@ -1,19 +1,7 @@
-import calcSignedAngle from './calc-signed-angle.js';
+import icoPoints from './ico-points.js';
 
-const { PI, asin, atan, sin, cos } = Math;
+const { PI, atan } = Math;
 const TAU = PI*2;
-
-const shoot = ([ lat, lon ], azm, rad) => {
-	const sin_rad = sin(rad);
-	let [ x, y, z ] = [ sin(azm)*sin_rad, cos(azm)*sin_rad, cos(rad) ];
-	const cos_lat = cos(lat);
-	const sin_lat = sin(lat);
-	[ y, z ] = [ y*cos_lat + z*sin_lat, z*cos_lat - y*sin_lat ];
-	const cos_lon = cos(lon);
-	const sin_lon = sin(lon);
-	[ x, z ] = [ x*cos_lon + z*sin_lon, z*cos_lon - x*sin_lon ];
-	return [ asin(y), calcSignedAngle(z, x) ];
-};
 
 class Searcher {
 	constructor(objFn, coord = [ 0, 0 ], radius = PI/2, points = 6) {
@@ -46,23 +34,6 @@ class Searcher {
 		}
 	}
 }
-
-const icoPoints = (() => {
-	const lat = atan(1/2);
-	const points = [
-		[ PI/2, 0 ],
-	];
-	for (let i=0; i<5; ++i) {
-		const lon = (i/5)*(PI*2);
-		points.push([ lat, lon > PI ? lon - TAU : lon ]);
-	}
-	for (let i=0; i<5; ++i) {
-		const lon = ((i/5)*(PI*2) + PI)%TAU;
-		points.push([ -lat, lon > PI ? lon - TAU : lon ]);
-	}
-	points.push([ -PI/2, 0 ]);
-	return points;
-})();
 
 const sphereSearch = (objFn, maxIt = 1500, minRad = 1e-8) => {
 	const searchers = icoPoints.map(coord => {
