@@ -1,15 +1,36 @@
-import './az-alt.js';
-import './dip.js';
-import './drop.js';
-import './encrypt.js';
-import './fix-alt.js';
-import './get-gp.js';
-import './hav.js';
-import './hid.js';
-import './hrz-dist.js';
-import './intersect.js';
-import './random-fix.js';
-import './sagitta.js';
-import './sph-exc.js';
-import './trilaterate.js';
-import './wipe.js';
+const { REST, Routes } = require('discord.js');
+const Config = require('../config.js');
+const fs = require('fs');
+const path = require('path');
+
+const guildId = '514957494427189258';
+const botId = '867142878349492225';
+
+module.exports = async (client) => {
+	const dir = path.join(__dirname, 'command-list');
+
+	const commands = fs.readdirSync(dir).map(name => {
+		const pathname = path.join(dir, name);
+		return require(pathname);
+	});
+
+	const rest = new REST({ version: '10' }).setToken(Config.token);
+
+	await rest.put(
+		Routes.applicationGuildCommands(botId, guildId),
+		{ body: commands },
+	);
+
+	client.on('interactionCreate', async (interaction) => {
+		if (!interaction.isChatInputCommand()) {
+			return;
+		}
+		const name = interaction.commandName;
+		const command = commands.find(command => command.name === name);
+		if (command !== null) {
+			await command.run(interaction);
+		}
+	});
+	
+	console.log('Commands loaded');
+};
