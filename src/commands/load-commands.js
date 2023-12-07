@@ -1,24 +1,16 @@
-const { REST, Routes } = require('discord.js');
-const Config = require('../config.js');
-const fs = require('fs');
-const path = require('path');
+import { REST, Routes } from "discord.js";
+import { config } from "../config.js";
+import { commandList } from "./command-list.js";
 
-const guildId = '514957494427189258';
-const botId = '867142878349492225';
-
-module.exports = async (client) => {
-	const dir = path.join(__dirname, 'command-list');
-
-	const commands = fs.readdirSync(dir).map(name => {
-		const pathname = path.join(dir, name);
-		return require(pathname);
-	});
-
-	const rest = new REST({ version: '10' }).setToken(Config.token);
+export const loadCommands = async ({
+	client,
+	server,
+}) => {
+	const rest = new REST({ version: '10' }).setToken(config.token);
 
 	await rest.put(
-		Routes.applicationGuildCommands(botId, guildId),
-		{ body: commands },
+		Routes.applicationGuildCommands(config.botId, server.id),
+		{ body: commandList },
 	);
 
 	client.on('interactionCreate', async (interaction) => {
@@ -26,11 +18,15 @@ module.exports = async (client) => {
 			return;
 		}
 		const name = interaction.commandName;
-		const command = commands.find(command => command.name === name);
+		const command = commandList.find(command => command.name === name);
 		if (command !== null) {
-			await command.run(interaction);
+			try {
+				await command.run(interaction);
+			} catch (err) {
+				console.error(err);
+			}
 		}
 	});
 	
-	console.log('Commands loaded');
+	console.log(`Commands loaded in '${server.name}' server`);
 };

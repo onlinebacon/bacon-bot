@@ -1,6 +1,7 @@
-const Config = require('./config.js');
-const { Client, IntentsBitField } = require('discord.js');
-const loadCommands = require('./commands/load-commands.js');
+import { config } from './config.js';
+import { loadCommands } from './commands/load-commands.js';
+import { Client, IntentsBitField } from 'discord.js';
+import { servers } from './servers/servers.js';
 
 const client = new Client({
 	intents: [
@@ -14,8 +15,10 @@ const client = new Client({
 
 const main = async () => {
 	const readyPromise = new Promise(done => client.on('ready', done));
-	await loadCommands(client);
-	await client.login(Config.token);
+	await Promise.all(
+		servers.map(server => loadCommands({ client, server })),
+	);
+	await client.login(config.token);
 	await readyPromise;
 };
 

@@ -1,5 +1,5 @@
-module.exports = {
+export const config = {
 	debug: false,
 	token: '',
-	reportChannelId: '',
+	botId: '',
 };
