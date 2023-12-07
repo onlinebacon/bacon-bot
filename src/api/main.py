@@ -21,9 +21,10 @@ def df_star_to_mag(df_star):
 	mag = float(mag_text)
 	return mag
 
-@app.route('/time/<int:unix>/hip/<int:hip>')
-def get_star_at(unix, hip):
+@app.route('/time/<unix_str>/hip/<int:hip>')
+def get_star_at(unix_str, hip):
 	try:
+		unix = float(unix_str)
 		dt = datetime.fromtimestamp(unix).astimezone(timezone.utc)
 		t = ts.from_datetime(dt)
 		df_star = df.loc[hip]
@@ -35,9 +36,10 @@ def get_star_at(unix, hip):
 		print(error)
 		return 'Internal error', 500
 
-@app.route('/time/<int:unix>/planet/<string:name>')
-def get_planet_at(unix, name):
+@app.route('/time/<unix_str>/planet/<string:name>')
+def get_planet_at(unix_str, name):
 	try:
+		unix = float(unix_str)
 		dt = datetime.fromtimestamp(unix).astimezone(timezone.utc)
 		t = ts.from_datetime(dt)
 		name = name.lower()
@@ -52,9 +54,10 @@ def get_planet_at(unix, name):
 		print(error)
 		return 'Internal error', 500
 
-@app.route('/time/<int:unix>/sun')
-def get_sun_at(unix):
+@app.route('/time/<unix_str>/sun')
+def get_sun_at(unix_str):
 	try:
+		unix = float(unix_str)
 		dt = datetime.fromtimestamp(unix).astimezone(timezone.utc)
 		t = ts.from_datetime(dt)
 		sun = ephem['sun']
@@ -64,9 +67,10 @@ def get_sun_at(unix):
 		print(error)
 		return 'Internal error', 500
 
-@app.route('/time/<int:unix>/moon')
-def get_moon_at(unix):
+@app.route('/time/<unix_str>/moon')
+def get_moon_at(unix_str):
 	try:
+		unix = float(unix_str)
 		dt = datetime.fromtimestamp(unix).astimezone(timezone.utc)
 		t = ts.from_datetime(dt)
 		moon = ephem['moon']
@@ -76,9 +80,10 @@ def get_moon_at(unix):
 		print(error)
 		return 'Internal error', 500
 
-@app.route('/time/<int:unix>/bright-stars/<string:min_mag>')
-def get_bright_stars(unix, min_mag):
+@app.route('/time/<unix_str>/bright-stars/<string:min_mag>')
+def get_bright_stars(unix_str, min_mag):
 	try:
+		unix = float(unix_str)
 		min_mag = float(min_mag)
 		dt = datetime.fromtimestamp(unix).astimezone(timezone.utc)
 		t = ts.from_datetime(dt)

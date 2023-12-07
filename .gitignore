@@ -4,3 +4,4 @@ config.js
 *.temp.json
 *.bsp
 *.dat
+*.download
