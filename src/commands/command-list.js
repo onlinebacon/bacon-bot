@@ -1,5 +1,5 @@
-import { pingCommand } from "./commands/ping.js";
+import { testCommand } from "./commands/test.js";
 
-export const commandList = [
-	pingCommand,
+export const commands = [
+	testCommand,
 ];
