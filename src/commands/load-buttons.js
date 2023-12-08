@@ -10,15 +10,15 @@ export const loadButtons = (client) => {
 		if (!interaction.isButton()) return;
 		const button = client.buttons.get(interaction.customId);
 		if (!button) return;
-        try {
-            await button.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            await interaction.reply({
+		try {
+			await button.execute(interaction);
+		} catch (error) {
+			console.error(error);
+			await interaction.reply({
 				content: 'There was an error while running this action!',
 				ephemeral: true,
 			});
-        }
+		}
 	});
 	console.log('Buttons loaded');
 };
