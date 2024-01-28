@@ -125,8 +125,13 @@ const hipMap = {
 	113963: /^markab$/i,
 };
 
+const intRegex = /^\d+$/;
+
 const getBodyPath = (name) => {
     const lower = name.toLowerCase();
+	if (intRegex.test(name)) {
+		return `/hip/${name}`;
+	}
     if (planets.includes(lower)) return '/planet/' + name;
     if (bodies.includes(lower)) return '/' + name;
     for (let hip in hipMap) {
