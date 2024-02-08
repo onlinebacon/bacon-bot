@@ -12,5 +12,6 @@ import './intersect.js';
 import './random-fix.js';
 import './sagitta.js';
 import './sph-exc.js';
+import './t-msg.js';
 import './trilaterate.js';
 import './wipe.js';
