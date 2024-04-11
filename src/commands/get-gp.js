@@ -24,8 +24,13 @@ const compileInfo = (ctx, unixtime, { ra, dec, dist }) => {
 	const lon = calcLon(ariesGHA, raDeg);
 	const latStr = ctx.latLon.stringifyLat(lat);
 	const lonStr = ctx.latLon.stringifyLon(lon);
+
+	const hp = Math.atan(6371008.8/dist)/Math.PI*180;
+	const strHP = ctx.degFormat.stringify(hp);
+
 	message += `**Ra/Dec**: \`${strRa}\` / \`${strDec}\`\n`;
 	message += `**Distance**: \`${strDist}\`\n`;
+	message += `**HP**: \`${strHP}\`\n`;
 	message += `**Aries GHA**: \`${strAriesGHA}\`\n`;
 	message += `**GP**: \`${latStr}\`, \`${lonStr}\`\n`;
 	return message;
